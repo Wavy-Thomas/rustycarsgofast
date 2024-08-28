@@ -1,0 +1,36 @@
+.hamburger-button {
+    font-size: 24px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    margin: 10px;
+}
+
+.menu {
+    background-color: #333;
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    border-radius: 5px;
+}
+
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    padding: 12px 20px;
+}
+
+.menu li a {
+    color: white;
+    text-decoration: none;
+}
+
+.menu li a:hover {
+    background-color: #555;
+    border-radius: 5px;
+}
