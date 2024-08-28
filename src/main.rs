@@ -1,39 +1,38 @@
 use yew::prelude::*;
+use gloo_net::http::Request;
+use wasm_bindgen_futures::spawn_local;
+
+async fn fetch_csv_data() -> Result<String, Box<dyn std::error::Error>> {
+    let url = "https://rustycarsgofast.s3.amazonaws.com/csv_files/data.csv";
+    let response = Request::get(url).send().await?;
+    let csv_content = response.text().await?;
+    Ok(csv_content)
+}
 
 #[function_component(App)]
 fn app() -> Html {
-    html! {
-        <div>
-            <h1>{ "Rusty Cars Go Fast" }</h1>
-            <HamburgerMenu />
-            <p>{ "Welcome to our homepage!" }</p>
-        </div>
+    let csv_data = use_state(|| None);
+
+    {
+        let csv_data = csv_data.clone();
+        use_effect_with_deps(move |_| {
+            spawn_local(async move {
+                match fetch_csv_data().await {
+                    Ok(data) => csv_data.set(Some(data)),
+                    Err(err) => eprintln!("Error fetching CSV: {}", err),
+                }
+            });
+            || ()
+        }, ());
     }
-}
-
-#[function_component(HamburgerMenu)]
-fn hamburger_menu() -> Html {
-    let menu_open = use_state(|| false);
-
-    let toggle_menu = {
-        let menu_open = menu_open.clone();
-        Callback::from(move |_| menu_open.set(!*menu_open))
-    };
 
     html! {
         <div>
-            <button class="hamburger-button" onclick={toggle_menu.clone()}>
-                { if *menu_open { "✕" } else { "☰" } }
-            </button>
-            if *menu_open {
-                <nav class="menu">
-                    <ul>
-                        <li><a href="#home">{"Home"}</a></li>
-                        <li><a href="#about">{"About"}</a></li>
-                        <li><a href="#services">{"Services"}</a></li>
-                        <li><a href="#contact">{"Contact"}</a></li>
-                    </ul>
-                </nav>
+            <h1>{ "CSV Data" }</h1>
+            if let Some(ref data) = *csv_data {
+                <pre>{ data }</pre>
+            } else {
+                <p>{ "Loading..." }</p>
             }
         </div>
     }

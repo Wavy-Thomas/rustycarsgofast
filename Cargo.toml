@@ -8,3 +8,9 @@ edition = "2018"
 
 [dependencies]
 yew = "^0.19"
+web-sys = { version = "0.3", features = ["HtmlInputElement"] }
+csv = "1.1"
+gloo-net = "0.6"  # Add this line
+wasm-bindgen-futures = "0.4"
+log = "0.4"  # Add the log crate
+console_log = "0.2"  # Add the console_log crate for logging to the browser console
