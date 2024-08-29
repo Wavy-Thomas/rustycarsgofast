@@ -3,7 +3,7 @@ use gloo_net::http::Request;
 use wasm_bindgen_futures::spawn_local;
 
 async fn fetch_csv_data() -> Result<String, Box<dyn std::error::Error>> {
-    let url = "https://rustycarsgofast.s3.amazonaws.com/csv_files/data.csv";
+    let url = "https://rustycarsgofast.s3.amazonaws.com/csv_files/ecu_microsquirt_pinout.csv";
     let response = Request::get(url).send().await?;
     let csv_content = response.text().await?;
     Ok(csv_content)
